@@ -2,11 +2,33 @@ package routing;
 
 import core.Settings;
 import core.Connection;
+//import routing.util.RoutingTable;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Map;
+import java.util.ArrayList;
+import java.lang.StringBuilder;
+import core.DTNHost;
 
 /**
  * OLSR message router
  */
 public class OLSRRouter extends ActiveRouter {
+
+    private static class RoutingEntry {
+        String neighbor;
+        String nextHop;
+        int hopCount;
+
+        public RoutingEntry(String neighbor, String nextHop, int hopCount) {
+            this.neighbor = neighbor;
+            this.nextHop = nextHop;
+            this.hopCount = hopCount;
+        }
+    }
+    private ArrayList<RoutingEntry> routingTable = new ArrayList<RoutingEntry>();
+
+//    private RoutingTable routingTable;
 
     /**
      * Constructor. Creates a new message router based on the settings in
@@ -26,13 +48,6 @@ public class OLSRRouter extends ActiveRouter {
         super(r);
         //TODO: copy OLSR settings here (if any)
     }
-
-//    @Override
-//    public void changedConnection(Connection con) {
-//        if (this.energy != null && con.isUp() && !con.isInitiator(getHost())) {
-//            this.energy.reduceDiscoveryEnergy();
-//        }
-//    }
 
     @Override
     public void update() {
@@ -54,6 +69,22 @@ public class OLSRRouter extends ActiveRouter {
 
         // Forward messages using OLSR routing table
         forwardMessages();
+    }
+
+    @Override
+    public void changedConnection(Connection con) {
+        if (this.getHost().toString().equals(con.fromNode.toString())) {
+            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
+        }
+        else {
+            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
+
+            RoutingEntry entry = new RoutingEntry(con.fromNode.toString(), con.fromNode.toString(), 1);
+            routingTable.add(entry);
+
+//            routingTable.addEntry(con.fromNode, con.fromNode, 1);
+//            System.out.println(con.fromNode.getClass().getName());
+        }
     }
 
     private void sendHelloMessages() {
@@ -89,14 +120,6 @@ public class OLSRRouter extends ActiveRouter {
     @Override
     public OLSRRouter replicate() {
         return new OLSRRouter(this);
-    }
-
-    @Override
-    public void changedConnection(Connection con) {
-        if (this.getHost().toString().equals(con.fromNode.toString()))
-            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
-        else
-            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
     }
 
 }
