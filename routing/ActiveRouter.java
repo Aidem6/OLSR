@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import routing.util.EnergyModel;
 import routing.util.MessageTransferAcceptPolicy;
@@ -452,6 +453,12 @@ public abstract class ActiveRouter extends MessageRouter {
 		if (connections.size() == 0 || this.getNrofMessages() == 0) {
 			return null;
 		}
+
+//		System.out.println(Arrays.toString(connections.toArray()));
+//
+//		String x=String.valueOf(connections.size());
+//		String y=String.valueOf(this.getNrofMessages());
+//		System.out.println("connections.size(): " + x + " this.getNrofMessages(): " + y);
 
 		List<Message> messages = 
 			new ArrayList<Message>(this.getMessageCollection());

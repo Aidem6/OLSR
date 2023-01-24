@@ -1,6 +1,7 @@
 package routing;
 
 import core.Settings;
+import core.Connection;
 
 /**
  * OLSR message router
@@ -38,8 +39,8 @@ public class OLSRRouter extends ActiveRouter {
         super.update();
 
         // Check if we need to send HELLO or TC messages
-        sendHelloMessages();
-        sendTcMessages();
+//        sendHelloMessages();
+//        sendTcMessages();
 
         // Check if we have any messages to deliver
         if (isTransferring() || !canStartTransfer()) {
@@ -62,6 +63,7 @@ public class OLSRRouter extends ActiveRouter {
         // have to establish routing table once at the beginning?
 
         // Do we send hello messages every interval of time?
+        return;
     }
 
     private void sendTcMessages() {
@@ -70,19 +72,31 @@ public class OLSRRouter extends ActiveRouter {
         // Check if we have any active connections
         // Check if we need to send a TC message
         // Send the TC message to all active connections
+        return;
     }
 
     private void forwardMessages() {
         // Use OLSR routing table to determine next hop for each message
         // and try to send the message to the next hop
 
+//        this.tryAllMessagesToAllConnections();
+
         // If the message doesn't have a final recipient or the destination is not a neighbor, forward
         // the message to all neighbors?
+        return;
     }
 
     @Override
     public OLSRRouter replicate() {
         return new OLSRRouter(this);
+    }
+
+    @Override
+    public void changedConnection(Connection con) {
+        if (this.getHost().toString().equals(con.fromNode.toString()))
+            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
+        else
+            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
     }
 
 }
