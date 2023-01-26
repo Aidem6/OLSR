@@ -2,11 +2,14 @@ package routing;
 
 import core.Settings;
 import core.Connection;
+import routing.util.RoutingTable;
 
 /**
  * OLSR message router
  */
 public class OLSRRouter extends ActiveRouter {
+
+    private RoutingTable routingTable;
 
     /**
      * Constructor. Creates a new message router based on the settings in
@@ -15,6 +18,7 @@ public class OLSRRouter extends ActiveRouter {
      */
     public OLSRRouter(Settings s) {
         super(s);
+        routingTable = new RoutingTable();
         //TODO: read&use OLSR router specific settings (if any)
     }
 
@@ -24,15 +28,9 @@ public class OLSRRouter extends ActiveRouter {
      */
     protected OLSRRouter(OLSRRouter r) {
         super(r);
+        routingTable = new RoutingTable();
         //TODO: copy OLSR settings here (if any)
     }
-
-//    @Override
-//    public void changedConnection(Connection con) {
-//        if (this.energy != null && con.isUp() && !con.isInitiator(getHost())) {
-//            this.energy.reduceDiscoveryEnergy();
-//        }
-//    }
 
     @Override
     public void update() {
@@ -54,6 +52,19 @@ public class OLSRRouter extends ActiveRouter {
 
         // Forward messages using OLSR routing table
         forwardMessages();
+    }
+
+    @Override
+    public void changedConnection(Connection con) {
+        if (this.getHost().toString().equals(con.fromNode.toString())) {
+            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
+        }
+        else {
+            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
+
+            routingTable.addEntry(con.fromNode, con.fromNode, 1);
+            System.out.println(routingTable.toString());
+        }
     }
 
     private void sendHelloMessages() {
@@ -89,14 +100,6 @@ public class OLSRRouter extends ActiveRouter {
     @Override
     public OLSRRouter replicate() {
         return new OLSRRouter(this);
-    }
-
-    @Override
-    public void changedConnection(Connection con) {
-        if (this.getHost().toString().equals(con.fromNode.toString()))
-            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
-        else
-            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
     }
 
 }
