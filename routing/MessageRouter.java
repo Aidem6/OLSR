@@ -237,6 +237,10 @@ public abstract class MessageRouter {
 	public Collection<Message> getMessageCollection() {
 		return this.messages.values();
 	}
+
+	public boolean isInMessageCollection(Message m){
+		return this.messages.values().stream().anyMatch(x -> x.getTo() == m.getTo() && x.getId() == m.getId());
+	}
 	
 	/**
 	 * Returns the number of messages this router has

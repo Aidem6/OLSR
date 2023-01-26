@@ -19,7 +19,7 @@ public class OLSRRouter extends ActiveRouter {
 
     private RoutingTable routingTable;
     private double lastTcTime;
-    private double DEFAULT_TC_INTERVAL = 5.0;
+    private double DEFAULT_TC_INTERVAL = 500.0;
 
 
     /**
@@ -45,11 +45,11 @@ public class OLSRRouter extends ActiveRouter {
 
     @Override
     public void update() {
-        super.update();
+//        super.update();
 
         // Check if we need to send HELLO or TC messages
 //        sendHelloMessages();
-//        sendTcMessages();
+        sendTcMessages();
 
         // Check if we have any messages to deliver
         if (isTransferring() || !canStartTransfer()) {
@@ -62,23 +62,33 @@ public class OLSRRouter extends ActiveRouter {
         }
 
         // Forward messages using OLSR routing table
-        forwardMessages();
+//        forwardMessages();
+        this.tryAllMessagesToAllConnections();
     }
 
     @Override
     public void changedConnection(Connection con) {
         super.changedConnection(con);
-        if (this.getHost().toString().equals(con.fromNode.toString())) {
-//            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
-        }
-        else {
-            System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
 
-            routingTable.addEntry(con.fromNode, con.fromNode, con, 1, true);
-            System.out.println(routingTable.toString());
-            System.out.println(routingTable.getDestinations().toString());
-            System.out.println(routingTable.getNeighbors().toString());
+        if (routingTable.contains(con.fromNode) || routingTable.contains(con.toNode)) {
+            return;
         }
+
+        if (this.getHost().toString().equals(con.fromNode.toString())) {
+//            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);routingTable.addEntry(con.fromNode, con.fromNode, con, 1, true);
+
+            routingTable.addEntry(con.toNode, con.toNode, con, 1, true);
+//            if (this.getHost().toString().equals("c62")) {
+//                System.out.println("I'm " + this.getHost().toString() + " and I have new connection with " + con.toNode);
+//                System.out.println(routingTable.toString());
+//                System.out.println(routingTable.getDestinations().toString());
+//                System.out.println(routingTable.getNeighbors().toString());
+//            }
+        }
+//        else {
+//            if (this.getHost().toString().equals("c62"))
+//                System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
+//        }
     }
 
     private void sendHelloMessages() {
@@ -93,12 +103,12 @@ public class OLSRRouter extends ActiveRouter {
 
 
     private void sendTcMessages() {
-        // Check if we have any active connections
-        List<Connection> connections = getConnections();
-        System.out.println("I'm " + this.getHost().toString() + " and I have " + connections.size() + " connections");
-        if (connections.isEmpty()) {
+        // Check if we have any active connections with neighbors
+        List<Connection> neighborConnections = routingTable.getNeighborConnections();
+        if (neighborConnections.isEmpty()) {
             return;
         }
+//        System.out.println("I'm " + this.getHost().toString() + " and I HAVE " + neighborConnections.size() + " neighbors");
 
         // Check if we need to send a TC message
         double tcInterval = getTcInterval();
@@ -106,36 +116,29 @@ public class OLSRRouter extends ActiveRouter {
             return;
         }
 
-        // Create a new TC message
-        Message tcMessage = createTcMessage();
-        addToMessages(tcMessage, false);
-
-        // Send the TC message to all active connections
-        for (Connection con : connections) {
-            if (con.isUp()) {
+        if (this.getHost().toString().equals("c62")) {
+            // Create a new TC message
+            Message m = new Message(this.getHost(), routingTable.getNeighborConnections().get(0).toNode, this.getHost().toString(), 1);
+            //check if it isn't already in the message collection
+            if (this.getHost().isInMessageCollection(m)) {
+                return;
+            }
+            //add if not
+            this.createNewMessage(m);
+            System.out.println("I'm " + this.getHost().toString() + " and I've created a TC message: " + m.toString());
+//            System.out.println(this.getHost().getMessageCollection().toString());
+            // Send the TC message to all active connections
+            System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() + " neighbors");
+            for (Connection con : neighborConnections) {
+                System.out.println("I'm " + this.getHost().toString() + " and I'm sending a TC message to " + con.toNode);
 //                tryToSendMessage(tcMessage.getId(), con, true);
 //                System.out.println("I'm " + this.getHost().toString() + " and I've sent a TC message to " + con.toNode);
 //                System.out.println(this.getHost().getMessageCollection().toString());
-
             }
         }
 
         // Update the last TC time
         lastTcTime = SimClock.getTime();
-    }
-
-    private Message createTcMessage() {
-        // Create a new TC message and add entries for each destination
-        // in the router's routing table
-        Message tcMessage = new Message(getHost(), null, "TC", 0);
-        Map<DTNHost, Integer> entries = new HashMap<>();
-        for (DTNHost destination : routingTable.getDestinations()) {
-            DTNHost nextHop = routingTable.getNextHop(destination);
-            int hopCount = routingTable.getHopCount(destination);
-            entries.put(destination, hopCount);
-        }
-        tcMessage.addProperty("entries", entries);
-        return tcMessage;
     }
 
     private double getTcInterval() {

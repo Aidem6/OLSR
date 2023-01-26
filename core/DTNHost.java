@@ -223,6 +223,10 @@ public class DTNHost implements Comparable<DTNHost> {
 		return this.router.getMessageCollection();
 	}
 
+	public boolean isInMessageCollection(Message m){
+		return this.router.isInMessageCollection(m);
+	}
+
 	/**
 	 * Returns the number of messages this node is carrying.
 	 * @return How many messages the node is carrying currently.

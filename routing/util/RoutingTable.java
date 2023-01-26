@@ -5,6 +5,8 @@ import core.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.lang.StringBuilder;
 
@@ -65,6 +67,23 @@ public class RoutingTable {
         }
         return neighbors;
     }
+
+    public List<Connection> getNeighborConnections() {
+        Set<DTNHost> destinations = getDestinations();
+        List<Connection> neighborConnections = new ArrayList<>();
+        for (DTNHost destination : destinations) {
+            RoutingEntry entry = table.get(destination);
+            if (entry.isNeighbor) {
+                neighborConnections.add(entry.nextHopConnection);
+            }
+        }
+        return neighborConnections;
+    }
+
+    public boolean contains(DTNHost destination) {
+        return table.containsKey(destination);
+    }
+
 
     private static class RoutingEntry {
         DTNHost destination;
