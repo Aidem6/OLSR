@@ -19,7 +19,7 @@ public class OLSRRouter extends ActiveRouter {
 
     private RoutingTable routingTable;
     private double lastTcTime;
-    private double DEFAULT_TC_INTERVAL = 500.0;
+    private double DEFAULT_TC_INTERVAL = 50.0;
 
 
     /**
@@ -49,7 +49,12 @@ public class OLSRRouter extends ActiveRouter {
 
         // Check if we need to send HELLO or TC messages
 //        sendHelloMessages();
-        sendTcMessages();
+//        sendTcMessages();
+//        if (this.getHost().toString().equals("b12")) {
+//            List<Connection> connections = this.getConnections();
+//            System.out.println("I'm " + this.getHost().toString() + " and I have connections: " + connections.size());
+//            System.out.println("I'm " + this.getHost().toString() + " and I have neighbours in routing table: " + routingTable.getNeighborConnections().size());
+//        }
 
         // Check if we have any messages to deliver
         if (isTransferring() || !canStartTransfer()) {
@@ -63,30 +68,56 @@ public class OLSRRouter extends ActiveRouter {
 
         // Forward messages using OLSR routing table
 //        forwardMessages();
-        this.tryAllMessagesToAllConnections();
+//        this.tryAllMessagesToAllConnections();
     }
 
     @Override
     public void changedConnection(Connection con) {
         super.changedConnection(con);
 
-        if (routingTable.contains(con.fromNode) || routingTable.contains(con.toNode)) {
+//        if (!this.getHost().toString().equals("b12")) {
+//            return;
+//        }
+        if (!this.getHost().toString().equals(con.fromNode.toString())) {
+            System.out.println("I'm " + this.getHost().toString() + " and I've received a connection from " + con.fromNode);
             return;
         }
+//        System.out.println("Time: " + SimClock.getTime());
+        if (con.isUp()) {
+//            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);
 
-        if (this.getHost().toString().equals(con.fromNode.toString())) {
-//            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);routingTable.addEntry(con.fromNode, con.fromNode, con, 1, true);
-
-            routingTable.addEntry(con.toNode, con.toNode, con, 1, true);
-//            if (this.getHost().toString().equals("c62")) {
-//                System.out.println("I'm " + this.getHost().toString() + " and I have new connection with " + con.toNode);
-//                System.out.println(routingTable.toString());
-//                System.out.println(routingTable.getDestinations().toString());
-//                System.out.println(routingTable.getNeighbors().toString());
-//            }
+            if (routingTable.contains(con.toNode)) {
+                return;
+            }
+            routingTable.addEntry(con.toNode, con.toNode, con, 1, true, SimClock.getTime());
         }
+        else {
+//            System.out.println("I'm " + this.getHost().toString() + " and I've lost a connection to " + con.toNode);
+
+            if (!routingTable.contains(con.toNode)) {
+                return;
+            }
+            routingTable.removeEntry(con.toNode, SimClock.getTime());
+        }
+//        System.out.println(routingTable.toString());
+
+//        if (routingTable.contains(con.fromNode) || routingTable.contains(con.toNode)) {
+//            return;
+//        }
+
+//        if (this.getHost().toString().equals(con.fromNode.toString())) {
+////            System.out.println("I'm " + this.getHost().toString() + " and I've sent a new connection to " + con.toNode);routingTable.addEntry(con.fromNode, con.fromNode, con, 1, true);
+//
+//            routingTable.addEntry(con.toNode, con.toNode, con, 1, true);
+////            if (this.getHost().toString().equals("b12")) {
+////                System.out.println("I'm " + this.getHost().toString() + " and I have new connection with " + con.toNode);
+////                System.out.println(routingTable.toString());
+////                System.out.println(routingTable.getDestinations().toString());
+////                System.out.println(routingTable.getNeighbors().toString());
+////            }
+//        }
 //        else {
-//            if (this.getHost().toString().equals("c62"))
+//            if (this.getHost().toString().equals("b12"))
 //                System.out.println("I'm " + this.getHost().toString() + " and I've received a new connection from " + con.fromNode);
 //        }
     }
@@ -116,25 +147,31 @@ public class OLSRRouter extends ActiveRouter {
             return;
         }
 
-        if (this.getHost().toString().equals("c62")) {
-            // Create a new TC message
-            Message m = new Message(this.getHost(), routingTable.getNeighborConnections().get(0).toNode, this.getHost().toString(), 1);
-            //check if it isn't already in the message collection
-            if (this.getHost().isInMessageCollection(m)) {
-                return;
-            }
-            //add if not
-            this.createNewMessage(m);
-            System.out.println("I'm " + this.getHost().toString() + " and I've created a TC message: " + m.toString());
-//            System.out.println(this.getHost().getMessageCollection().toString());
-            // Send the TC message to all active connections
-            System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() + " neighbors");
-            for (Connection con : neighborConnections) {
-                System.out.println("I'm " + this.getHost().toString() + " and I'm sending a TC message to " + con.toNode);
-//                tryToSendMessage(tcMessage.getId(), con, true);
-//                System.out.println("I'm " + this.getHost().toString() + " and I've sent a TC message to " + con.toNode);
-//                System.out.println(this.getHost().getMessageCollection().toString());
-            }
+        if (this.getHost().toString().equals("b12")) {
+            //get connections
+            List<Connection> connections = this.getConnections();
+            System.out.println("I'm " + this.getHost().toString() + " and I have connections: " + connections.size());
+            System.out.println("I'm " + this.getHost().toString() + " and I have neighbours in routing table: " + routingTable.getNeighborConnections().size());
+
+
+//            // Create a new TC message
+//            Message m = new Message(this.getHost(), routingTable.getNeighborConnections().get(0).toNode, this.getHost().toString(), 1);
+//            //check if it isn't already in the message collection
+//            if (this.getHost().isInMessageCollection(m)) {
+//                return;
+//            }
+//            //add if not
+//            this.createNewMessage(m);
+//            System.out.println("I'm " + this.getHost().toString() + " and I've created a TC message: " + m.toString());
+////            System.out.println(this.getHost().getMessageCollection().toString());
+//            // Send the TC message to all active connections
+//            System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() + " neighbors");
+//            for (Connection con : neighborConnections) {
+//                System.out.println("I'm " + this.getHost().toString() + " and I'm sending a TC message to " + con.toNode);
+////                tryToSendMessage(tcMessage.getId(), con, true);
+////                System.out.println("I'm " + this.getHost().toString() + " and I've sent a TC message to " + con.toNode);
+////                System.out.println(this.getHost().getMessageCollection().toString());
+//            }
         }
 
         // Update the last TC time

@@ -14,17 +14,33 @@ import java.lang.StringBuilder;
 public class RoutingTable {
 
     private Map<DTNHost, RoutingEntry> table;
+    public double maxTimeToLive = 0;
+    public List<Double> timeToLiveList = new ArrayList<>();
 
     public RoutingTable() {
         this.table = new HashMap<>();
     }
 
-    public void addEntry(DTNHost destination, DTNHost nextHop, Connection nextHopConnection, int hopCount, boolean isNeighbor) {
-        RoutingEntry entry = new RoutingEntry(destination, nextHop, nextHopConnection, hopCount, isNeighbor);
+    public void addEntry(DTNHost destination, DTNHost nextHop, Connection nextHopConnection, int hopCount, boolean isNeighbor, double time) {
+        RoutingEntry entry = new RoutingEntry(destination, nextHop, nextHopConnection, hopCount, isNeighbor, time);
         table.put(destination, entry);
     }
 
-    public void removeEntry(DTNHost destination) {
+    public void removeEntry(DTNHost destination, double endTime) {
+        RoutingEntry entry = table.get(destination);
+        if (entry == null) {
+            return;
+        }
+        timeToLiveList.add(endTime - entry.time);
+        if (endTime - entry.time > maxTimeToLive) {
+            maxTimeToLive = endTime - entry.time;
+            System.out.println("Max time to live: " + maxTimeToLive);
+        }
+        double sum = 0;
+        for (double timeToLive : timeToLiveList) {
+            sum += timeToLive;
+        }
+        System.out.println("Mean time to live: " + sum / timeToLiveList.size());
         table.remove(destination);
     }
 
@@ -91,13 +107,15 @@ public class RoutingTable {
         Connection nextHopConnection;
         boolean isNeighbor;
         int hopCount;
+        double time;
 
-        public RoutingEntry(DTNHost destination, DTNHost nextHop, Connection nextHopConnection, int hopCount, boolean isNeighbor) {
+        public RoutingEntry(DTNHost destination, DTNHost nextHop, Connection nextHopConnection, int hopCount, boolean isNeighbor, double time) {
             this.destination = destination;
             this.nextHop = nextHop;
             this.nextHopConnection = nextHopConnection;
             this.hopCount = hopCount;
             this.isNeighbor = isNeighbor;
+            this.time = time;
         }
     }
 
