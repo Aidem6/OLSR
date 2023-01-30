@@ -248,7 +248,7 @@ public class Message implements Comparable<Message> {
 	public String toString () {
 		return "Message " + this.getId() + " from " + this.getFrom() + " to " +
 			this.getTo() + " size:" + this.getSize() + " hops:" +
-			this.getHopCount() + " ttl:" + this.getTtl() + "\n";
+			this.getHopCount() + " ttl:" + this.getTtl() + " type:" + this.getProperty("type");
 	}
 
 	/**

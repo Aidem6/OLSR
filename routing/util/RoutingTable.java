@@ -34,14 +34,52 @@ public class RoutingTable {
         timeToLiveList.add(endTime - entry.time);
         if (endTime - entry.time > maxTimeToLive) {
             maxTimeToLive = endTime - entry.time;
-            System.out.println("Max time to live: " + maxTimeToLive);
+//            System.out.println("Max time to live: " + maxTimeToLive);
         }
         double sum = 0;
         for (double timeToLive : timeToLiveList) {
             sum += timeToLive;
         }
-        System.out.println("Mean time to live: " + sum / timeToLiveList.size());
+//        System.out.println("Mean time to live: " + sum / timeToLiveList.size());
         table.remove(destination);
+    }
+
+    // merge two routing tables into one
+    public void merge(DTNHost selfHost, RoutingTable otherTable) {
+        boolean printMode = false;
+        Set<DTNHost> otherDestinations = otherTable.getDestinations();
+        if (printMode) {
+            System.out.println("\n\ntable before: " + table.toString());
+            System.out.println("selfHost: " + selfHost.toString());
+            System.out.println("otherTable: " + otherTable.toString());
+        }
+        for (DTNHost destination : otherDestinations) {
+            RoutingEntry otherEntry = otherTable.table.get(destination);
+            RoutingEntry entry = table.get(destination);
+            if (otherEntry.nextHop == selfHost) {
+            }
+            else if (entry == null) {
+                otherEntry.isNeighbor = false;
+                otherEntry.hopCount++;
+                table.put(destination, otherEntry);
+                if (printMode) {
+                    System.out.println("entry is null");
+                    System.out.println("table after: " + table.toString());
+                }
+                System.out.println(selfHost.toString() + " new con to " + otherEntry.destination + " " + otherEntry.hopCount);
+            }
+            else if (entry.hopCount > (otherEntry.hopCount + 1)) {
+                otherEntry.isNeighbor = false;
+                otherEntry.hopCount++;
+                table.put(destination, otherEntry);
+                if (printMode) {
+                    System.out.println("hop count shortcut");
+                    System.out.println("otherEntry: " + otherEntry.toString());
+                    System.out.println("table after: " + table.toString());
+                }
+                System.out.println(selfHost.toString() + " UPDATED con to " + otherEntry.destination + " " + otherEntry.hopCount);
+            }
+        }
     }
 
     public DTNHost getNextHop(DTNHost destination) {
@@ -116,6 +154,14 @@ public class RoutingTable {
             this.hopCount = hopCount;
             this.isNeighbor = isNeighbor;
             this.time = time;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Routing Entry:\n");
+            sb.append(String.format(" destination: %s | next hop: %s | hop count: %d | isNeighbor : %b",
+                    destination, nextHop, hopCount, isNeighbor));
+            return sb.toString();
         }
     }
 
