@@ -2,6 +2,8 @@ package routing.util;
 
 import core.DTNHost;
 import core.Connection;
+import core.SimClock;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -85,6 +87,25 @@ public class RoutingTable {
         }
     }
 
+    //function that deletes inactive connections
+    public void clean() {
+        String tableBefore = table.toString();
+        Set<DTNHost> toRemove = new HashSet<>();
+        for (RoutingEntry entry : table.values()) {
+            if (!entry.nextHopConnection.isUp()) {
+                toRemove.add(entry.destination);
+            }
+        }
+        for (DTNHost destination : toRemove) {
+            this.removeEntry(destination, SimClock.getTime());
+        }
+        if (!tableBefore.equals(table.toString())) {
+            System.out.println("\nclean\nbefore:\n" + tableBefore);
+            System.out.println("after:\n" + table.toString());
+            System.out.println("\n");
+        }
+    }
+
     public DTNHost getNextHop(DTNHost destination) {
         RoutingEntry entry = table.get(destination);
         if (entry == null) {
@@ -161,8 +182,7 @@ public class RoutingTable {
 
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Routing Entry:\n");
-            sb.append(String.format(" destination: %s | next hop: %s | hop count: %d | isNeighbor : %b",
+            sb.append(String.format("\n destination: %s | next hop: %s | hop count: %d | isNeighbor : %b",
                     destination, nextHop, hopCount, isNeighbor));
             return sb.toString();
         }

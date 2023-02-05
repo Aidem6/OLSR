@@ -155,7 +155,7 @@ public class OLSRRouter extends ActiveRouter {
         } else {
             //need to forward this message
 
-            System.out.println("I'm " + this.getHost().toString() + " and I'm forwarding message " + incoming.toString());
+//            System.out.println("I'm " + this.getHost().toString() + " and I'm forwarding message " + incoming.toString());
             String messageID = incoming.getId();
             //beta message set
             if (messageSet.containsMessage(messageID)) {
@@ -231,11 +231,11 @@ public class OLSRRouter extends ActiveRouter {
         //iterate through all neighbors
         for (Connection neighborConnection : neighborConnections) {
             if (this.getHost().toString().equals(neighborConnection.fromNode.toString())) {
-                System.out.println("I'm " + this.getHost().toString() +
-                        " sending TC message to " + neighborConnection.toNode.toString());
+//                System.out.println("I'm " + this.getHost().toString() +
+//                        " sending TC message to " + neighborConnection.toNode.toString());
 
                 //print neighborConnection
-                System.out.println("neighborConnection: " + neighborConnection.toString());
+//                System.out.println("neighborConnection: " + neighborConnection.toString());
                 Message m = new Message(
                         this.getHost(),
                         neighborConnection.toNode,
@@ -244,11 +244,11 @@ public class OLSRRouter extends ActiveRouter {
                         1
                 );
             } else {
-                System.out.println("I'm " + this.getHost().toString() +
-                        " sending TC message to " + neighborConnection.fromNode.toString());
+//                System.out.println("I'm " + this.getHost().toString() +
+//                        " sending TC message to " + neighborConnection.fromNode.toString());
 
                 //print neighborConnection
-                System.out.println("neighborConnection: " + neighborConnection.toString());
+//                System.out.println("neighborConnection: " + neighborConnection.toString());
                 Message m = new Message(
                         this.getHost(),
                         neighborConnection.fromNode,
@@ -283,19 +283,22 @@ public class OLSRRouter extends ActiveRouter {
         // Use OLSR routing table to determine next hop for each message
         // and try to send the message to the next hop
 
+        //first clean routing table from inactive connections
+        routingTable.clean();
+
         List<Connection> neighborConnections = routingTable.getNeighborConnections();
         List<Message> messages = new ArrayList<Message>(this.getMessageCollection());
         this.sortByQueueMode(messages);
-        System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() +
-                " neighbors" + " and I have " + this.getNrofMessages() + " messages");
+//        System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() +
+//                " neighbors" + " and I have " + this.getNrofMessages() + " messages");
         if (neighborConnections.size() == 0 || this.getNrofMessages() == 0) {
             return;
         }
         //print all messages
-        System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + messages.size());
-        for (Message m : messages) {
-            System.out.println("I'm " + this.getHost().toString() + " and I have message: " + m.toString());
-        }
+//        System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + messages.size());
+//        for (Message m : messages) {
+//            System.out.println("I'm " + this.getHost().toString() + " and I have message: " + m.toString());
+//        }
         this.tryMessagesToConnections(messages, neighborConnections);
 
         // If the message doesn't have a final recipient or the destination is not a neighbor, forward
