@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="f3415df8-c583-4370-9869-efb5ae95f1fd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/default_scenario_ConnectivityONEReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/default_scenario_ConnectivityONEReport.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/default_scenario_ContactTimesReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/default_scenario_ContactTimesReport.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routing/OLSRRouter.class" beforeDir="false" afterPath="$PROJECT_DIR$/routing/OLSRRouter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/World.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ee/700_events_1000_nodes_700ks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ee/700_events_1000_nodes_700ks.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/ee/700_events_1000_nodes_700ks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/ee/700_events_1000_nodes_700ks.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/OLSRRouter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/OLSRRouter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable$RoutingEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable$RoutingEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/wdm_settings/Manhattan.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/wdm_settings/Manhattan.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routing/OLSRRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/routing/OLSRRouter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routing/util/RoutingTable$RoutingEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/routing/util/RoutingTable$RoutingEntry.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routing/util/RoutingTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/routing/util/RoutingTable.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routing/util/RoutingTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/routing/util/RoutingTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wdm_settings/Manhattan.txt" beforeDir="false" afterPath="$PROJECT_DIR$/wdm_settings/Manhattan.txt" afterDir="false" />
     </list>
@@ -18,6 +27,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,19 +46,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.customizations&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="DTNSim" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="core.DTNSim" />
       <module name="the-one-1.6.0" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/../the-one-1.6-2.0/wdm_settings/Manhattan.txt" />
+      <option name="PROGRAM_PARAMETERS" value="-b 1 $PROJECT_DIR$/wdm_settings/Manhattan.txt" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -56,11 +79,33 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1674779104200</updated>
-      <workItem from="1674779107472" duration="51000" />
+      <workItem from="1674779107472" duration="39402000" />
+      <workItem from="1675466746827" duration="1692000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="4" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

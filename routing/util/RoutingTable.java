@@ -45,7 +45,7 @@ public class RoutingTable {
     }
 
     // merge two routing tables into one
-    public void merge(DTNHost selfHost, RoutingTable otherTable) {
+    public void merge(DTNHost selfHost, DTNHost fromHost, RoutingTable otherTable) {
         boolean printMode = false;
         Set<DTNHost> otherDestinations = otherTable.getDestinations();
         if (printMode) {
@@ -61,23 +61,26 @@ public class RoutingTable {
             else if (entry == null) {
                 otherEntry.isNeighbor = false;
                 otherEntry.hopCount++;
+                otherEntry.nextHop = fromHost;
                 table.put(destination, otherEntry);
                 if (printMode) {
                     System.out.println("entry is null");
                     System.out.println("table after: " + table.toString());
                 }
-                System.out.println(selfHost.toString() + " new con to " + otherEntry.destination + " " + otherEntry.hopCount);
+//                System.out.println(selfHost.toString() + " new con to " + otherEntry.destination + " " + otherEntry.hopCount);
             }
             else if (entry.hopCount > (otherEntry.hopCount + 1)) {
                 otherEntry.isNeighbor = false;
                 otherEntry.hopCount++;
+                otherEntry.nextHop = fromHost;
                 table.put(destination, otherEntry);
                 if (printMode) {
                     System.out.println("hop count shortcut");
                     System.out.println("otherEntry: " + otherEntry.toString());
                     System.out.println("table after: " + table.toString());
                 }
-                System.out.println(selfHost.toString() + " UPDATED con to " + otherEntry.destination + " " + otherEntry.hopCount);
+//                System.out.println(selfHost.toString() + " UPDATED con from " + entry.destination + " " + entry.hopCount);
+//                System.out.println(selfHost.toString() + " UPDATED con to " + otherEntry.destination + " " + otherEntry.hopCount);
             }
         }
     }

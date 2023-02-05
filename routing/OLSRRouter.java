@@ -3,6 +3,8 @@ package routing;
 import core.*;
 import routing.util.MessageSet;
 import routing.util.RoutingTable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ public class OLSRRouter extends ActiveRouter {
     private RoutingTable routingTable;
     private MessageSet messageSet;
     private double lastTcTime;
-    private double DEFAULT_TC_INTERVAL = 5000.0;
+    private double DEFAULT_TC_INTERVAL = 500.0;
     private boolean isFirstTime = true;
     private double DEFAULT_MESSAGE_STORE_TIME = 200.0;
 
@@ -44,18 +46,28 @@ public class OLSRRouter extends ActiveRouter {
     @Override
     public void update() {
         super.update();
-
 //        sendHelloMessages();
 
         // Check if we need to send a TC message
-//        double tcInterval = getTcInterval();
-//        if (SimClock.getTime() - lastTcTime >= tcInterval) {
-//            sendTcMessages();
+        double tcInterval = getTcInterval();
+//        if (this.getHost().toString().equals("b12")) {
+//            System.out.println("\n " + SimClock.getTime() + " " + lastTcTime + " " + tcInterval);
+//            System.out.println(" " + (SimClock.getTime() - lastTcTime) + " >=? " + tcInterval);
+//            System.out.println(SimClock.getTime() - lastTcTime >= tcInterval);
 //        }
-        if (isFirstTime) {
+        if (SimClock.getTime() - lastTcTime >= tcInterval) {
+//            System.out.println("(SimClock.getTime() - lastTcTime >= tcInterval): ");
+//            System.out.println(SimClock.getTime() - lastTcTime >= tcInterval);
+//            System.out.println(" " + SimClock.getTime() + " " + lastTcTime + " " + tcInterval);
+//            System.out.println(" " + (SimClock.getTime() + lastTcTime) + " >= " + tcInterval);
             sendTcMessages();
-            isFirstTime = false;
+
+            lastTcTime = SimClock.getTime();
         }
+//        if (isFirstTime) {
+//            sendTcMessages();
+//            isFirstTime = false;
+//        }
 //        if (this.getHost().toString().equals("b12")) {
 //            List<Connection> connections = this.getConnections();
 //            System.out.println("I'm " + this.getHost().toString() + " and I have connections: " + connections.size());
@@ -72,14 +84,16 @@ public class OLSRRouter extends ActiveRouter {
             return; // started a transfer, don't try others (yet)
         }
 
-        // check if we received messages from other nodes
-        if (!this.getHost().getMessageCollection().isEmpty()) {
-//            System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + this.getHost().getMessageCollection().toString());
-            return;
-        }
+//        System.out.println("stop3");
+//        System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + this.getHost().getMessageCollection().isEmpty());
+//        // check if we received messages from other nodes
+//        if (!this.getHost().getMessageCollection().isEmpty()) {
+////            System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + this.getHost().getMessageCollection().toString());
+//            return;
+//        }
 
         // Forward messages using OLSR routing table
-        forwardMessages();
+        forwardMessagesToAllNeighbours();
     }
 
     private void processTcMessage(Message m) {
@@ -93,41 +107,28 @@ public class OLSRRouter extends ActiveRouter {
         if (TTL <= 0) {
             return;
         }
-        //beta message set
-//        if (messageSet.containsMessage(messageID)) {
-////            System.out.println(messageID + " is in the messageSet: " + messageSet.toString());
-//            //print message type
-//            RoutingTable neighborRoutingTable = (RoutingTable) m.getProperty("routingTable");
-//            System.out.println(neighborRoutingTable.toString());
-//            return;
-//        } else {
-//            //add the message to the message set
-////            System.out.println(messageID + " is not in the messageSet: " + messageSet.toString());
-//            double timeToDie = SimClock.getTime();
-//            timeToDie += DEFAULT_MESSAGE_STORE_TIME;
-//            messageSet.addMessage(messageID, timeToDie);
-//        }
         //read routing table from the message
         try {
             String oldRoutingTable = routingTable.toString();
             RoutingTable neighborRoutingTable = (RoutingTable) m.getProperty("routingTable");
 
-            routingTable.merge(this.getHost(), neighborRoutingTable);
+            routingTable.merge(this.getHost(), m.getFrom(), neighborRoutingTable);
             String newRoutingTable = routingTable.toString();
 
-            if (!oldRoutingTable.equals(newRoutingTable) && printMode) {
-                System.out.println("I'm " + this.getHost().toString() + " and my routing table has changed");
-                System.out.println(" old routing table: " + oldRoutingTable);
-                System.out.println(" new routing table: " + newRoutingTable);
+            if (!oldRoutingTable.equals(newRoutingTable)) {
+                //send the updated routing table to all neighbors
+                sendTcMessages();
+                if (printMode) {
+                    System.out.println("I'm " + this.getHost().toString() + " and my routing table has changed");
+                    System.out.println(" old routing table: " + oldRoutingTable);
+                    System.out.println(" new routing table: " + newRoutingTable);
+                }
             }
         } catch (NullPointerException e) {
             if (printMode) {
                 System.out.println("Message " + messageID + " didn't contain a routing table");
             }
-            return;
         }
-        //send the updated routing table to all neighbors
-        sendTcMessages();
     }
 
     @Override
@@ -148,10 +149,28 @@ public class OLSRRouter extends ActiveRouter {
             }
             //if type is tc
             else if (incoming.getProperty("type").equals("TC")) {
+//                System.out.println(SimClock.getTime() + " I'm " + this.getHost().toString() + " and I've got TC message ");
                 this.processTcMessage(incoming);
             }
         } else {
             //need to forward this message
+
+            System.out.println("I'm " + this.getHost().toString() + " and I'm forwarding message " + incoming.toString());
+            String messageID = incoming.getId();
+            //beta message set
+            if (messageSet.containsMessage(messageID)) {
+//            System.out.println(messageID + " is in the messageSet: " + messageSet.toString());
+                //print message type
+//                RoutingTable neighborRoutingTable = (RoutingTable) incoming.getProperty("routingTable");
+//            System.out.println(neighborRoutingTable.toString());
+//                return;
+            } else {
+                //add the message to the message set
+//            System.out.println(messageID + " is not in the messageSet: " + messageSet.toString());
+                double timeToDie = SimClock.getTime();
+                timeToDie += DEFAULT_MESSAGE_STORE_TIME;
+                messageSet.addMessage(messageID, timeToDie);
+            }
         }
 
         return incoming;
@@ -184,9 +203,6 @@ public class OLSRRouter extends ActiveRouter {
     private void sendHelloMessages() {
         // Implement HELLO message exchange process
 
-        // Does function changedConnection assure us that every new connection is found in here and we only
-        // have to establish routing table once at the beginning?
-
         // Do we send hello messages every interval of time?
         return;
     }
@@ -200,9 +216,11 @@ public class OLSRRouter extends ActiveRouter {
         }
 //        System.out.println("I'm " + this.getHost().toString() + " and I HAVE " + neighborConnections.size() + " neighbors");
 
-
-//        if (!this.getHost().toString().equals("b12")) {
-//            return;
+        if (SimClock.getTime() > 5000.0) {
+            return;
+        }
+//        if (this.getHost().toString().equals("b6")) {
+//            System.out.println("I'm " + this.getHost().toString() + " routing table: " + routingTable.toString());
 //        }
 
 //        List<Connection> connections = this.getConnections();
@@ -210,36 +228,44 @@ public class OLSRRouter extends ActiveRouter {
 //        System.out.println("I'm " + this.getHost().toString() + " and I have neighbours in routing table: " + routingTable.getNeighborConnections().size());
 
 
-        // Create a new TC message
-        Message m = new Message(
-                this.getHost(),
-                routingTable.getNeighborConnections().get(0).toNode,
-                "M-" + this.getHost().toString() + '-' +
-                        routingTable.getNeighborConnections().get(0).toNode.toString() + '-' + SimClock.getTime(),
-                1
-        );
+        //iterate through all neighbors
+        for (Connection neighborConnection : neighborConnections) {
+            if (this.getHost().toString().equals(neighborConnection.fromNode.toString())) {
+                System.out.println("I'm " + this.getHost().toString() +
+                        " sending TC message to " + neighborConnection.toNode.toString());
 
-        m.addProperty("type", "TC");
-        m.addProperty("routingTable", routingTable);
-        //check if it isn't already in the message collection
-        if (this.getHost().isInMessageCollection(m)) {
-            return;
-        }
-        //add if not
-        this.createNewMessage(m);
-//        System.out.println("I'm " + this.getHost().toString() + " and I've created a TC message: " + m.toString());
-//        System.out.println(this.getHost().getMessageCollection().toString());
-        // Send the TC message to all active connections
-//        System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() + " neighbors");
-        for (Connection con : neighborConnections) {
-//            System.out.println("I'm " + this.getHost().toString() + " and I'm sending a TC message to " + con.toNode);
-//                tryToSendMessage(tcMessage.getId(), con, true);
-//                System.out.println("I'm " + this.getHost().toString() + " and I've sent a TC message to " + con.toNode);
-//                System.out.println(this.getHost().getMessageCollection().toString());
-        }
+                //print neighborConnection
+                System.out.println("neighborConnection: " + neighborConnection.toString());
+                Message m = new Message(
+                        this.getHost(),
+                        neighborConnection.toNode,
+                        "M-" + this.getHost().toString() + '-' +
+                                neighborConnection.toNode.toString() + '-' + SimClock.getTime(),
+                        1
+                );
+            } else {
+                System.out.println("I'm " + this.getHost().toString() +
+                        " sending TC message to " + neighborConnection.fromNode.toString());
 
-        // Update the last TC time
-        lastTcTime = SimClock.getTime();
+                //print neighborConnection
+                System.out.println("neighborConnection: " + neighborConnection.toString());
+                Message m = new Message(
+                        this.getHost(),
+                        neighborConnection.fromNode,
+                        "M-" + this.getHost().toString() + '-' +
+                                neighborConnection.fromNode.toString() + '-' + SimClock.getTime(),
+                        1
+                );
+                m.addProperty("type", "TC");
+                m.addProperty("routingTable", routingTable);
+                //check if it isn't already in the message collection
+                if (this.getHost().isInMessageCollection(m)) {
+                    return;
+                }
+                //add if not
+                this.createNewMessage(m);
+            }
+        }
     }
 
     private double getTcInterval() {
@@ -253,15 +279,27 @@ public class OLSRRouter extends ActiveRouter {
     }
 
 
-    private void forwardMessages() {
+    private void forwardMessagesToAllNeighbours() {
         // Use OLSR routing table to determine next hop for each message
         // and try to send the message to the next hop
 
-        this.tryAllMessagesToAllConnections();
+        List<Connection> neighborConnections = routingTable.getNeighborConnections();
+        List<Message> messages = new ArrayList<Message>(this.getMessageCollection());
+        this.sortByQueueMode(messages);
+        System.out.println("I'm " + this.getHost().toString() + " and I have " + neighborConnections.size() +
+                " neighbors" + " and I have " + this.getNrofMessages() + " messages");
+        if (neighborConnections.size() == 0 || this.getNrofMessages() == 0) {
+            return;
+        }
+        //print all messages
+        System.out.println("I'm " + this.getHost().toString() + " and I have messages: " + messages.size());
+        for (Message m : messages) {
+            System.out.println("I'm " + this.getHost().toString() + " and I have message: " + m.toString());
+        }
+        this.tryMessagesToConnections(messages, neighborConnections);
 
         // If the message doesn't have a final recipient or the destination is not a neighbor, forward
         // the message to all neighbors?
-        return;
     }
 
     @Override

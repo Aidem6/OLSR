@@ -6,7 +6,7 @@ Scenario.updateInterval = 1
 Scenario.endTime = 700k
 
 Report.warmup = 200000
-Group.msgTtl = 1433
+Group.msgTtl = 10
 
 Scenario.nrofHostGroups = 3
 
