@@ -31,7 +31,9 @@ public class MessageReport extends Report implements MessageListener {
 		write(HEADER);
 	}
 	
-	public void newMessage(Message m) {}
+	public void newMessage(Message m) {
+		System.out.println("new message");
+	}
 	
 	public void messageTransferred(Message m, DTNHost from, DTNHost to, 
 			boolean firstDelivery) {

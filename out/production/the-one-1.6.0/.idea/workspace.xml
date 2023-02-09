@@ -7,8 +7,15 @@
     <list default="true" id="f3415df8-c583-4370-9869-efb5ae95f1fd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/OLSRRouter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/OLSRRouter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable$RoutingEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable$RoutingEntry.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/the-one-1.6.0/routing/util/RoutingTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactTimesReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactTimesReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactsDuringAnICTReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactsDuringAnICTReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactsPerHourReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_ContactsPerHourReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_EncountersVSUniqueEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_InterContactTimesReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_InterContactTimesReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_MessageStatsReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_MessageStatsReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_TotalEncountersReport.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reports/Manhattan/1/default_scenario_UniqueEncountersReport.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routing/OLSRRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/routing/OLSRRouter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routing/util/RoutingTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/routing/util/RoutingTable.java" afterDir="false" />
     </list>
@@ -70,6 +77,8 @@
       <updated>1674779104200</updated>
       <workItem from="1674779107472" duration="39402000" />
       <workItem from="1675466746827" duration="6776000" />
+      <workItem from="1675621387630" duration="2957000" />
+      <workItem from="1675755674951" duration="844000" />
     </task>
     <servers />
   </component>

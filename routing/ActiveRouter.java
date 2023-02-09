@@ -60,7 +60,7 @@ public abstract class ActiveRouter extends MessageRouter {
 		
 		this.policy = new MessageTransferAcceptPolicy(s);
 		
-		this.deleteDelivered = s.getBoolean(DELETE_DELIVERED_S, false);
+		this.deleteDelivered = s.getBoolean(DELETE_DELIVERED_S, true);
 		
 		if (s.contains(EnergyModel.INIT_ENERGY_S)) {
 			this.energy = new EnergyModel(s);
@@ -194,9 +194,10 @@ public abstract class ActiveRouter extends MessageRouter {
 		else if (deleteDelivered && retVal == DENIED_OLD && 
 				m.getTo() == con.getOtherNode(this.getHost())) {
 			/* final recipient has already received the msg -> delete it */
+			System.out.println("Deleting message " + m.getId() + " from " +
+					getHost());
 			this.deleteMessage(m.getId(), false);
 		}
-		
 		return retVal;
 	}
 	
@@ -386,6 +387,7 @@ public abstract class ActiveRouter extends MessageRouter {
 			Message m = t.getKey();
 			Connection con = t.getValue();
 			if (startTransfer(m, con) == RCV_OK) {
+//				System.out.println(" started transfer of Message " + m.getId() + " sent to " + m.getTo());
 				return t;
 			}
 		}
@@ -394,7 +396,7 @@ public abstract class ActiveRouter extends MessageRouter {
 	}
 	
 	 /**
-	  * Goes trough the messages until the other node accepts one
+	  * Goes through the messages until the other node accepts one
 	  * for receiving (or doesn't accept any). If a transfer is started, the
 	  * connection is included in the list of sending connections.
 	  * @param con Connection trough which the messages are sent

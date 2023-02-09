@@ -99,11 +99,11 @@ public class RoutingTable {
         for (DTNHost destination : toRemove) {
             this.removeEntry(destination, SimClock.getTime());
         }
-        if (!tableBefore.equals(table.toString())) {
-            System.out.println("\nclean\nbefore:\n" + tableBefore);
-            System.out.println("after:\n" + table.toString());
-            System.out.println("\n");
-        }
+//        if (!tableBefore.equals(table.toString())) {
+//            System.out.println("\nclean\nbefore:\n" + tableBefore);
+//            System.out.println("after:\n" + table.toString());
+//            System.out.println("\n");
+//        }
     }
 
     public DTNHost getNextHop(DTNHost destination) {

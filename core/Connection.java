@@ -135,6 +135,7 @@ public abstract class Connection {
 		assert msgFromNode != null : "msgFromNode is not set";
 		
 		this.bytesTransferred += msgOnFly.getSize();
+//		System.out.println("bytesTransferred: " + this.bytesTransferred);
 
 		getOtherNode(msgFromNode).messageTransferred(this.msgOnFly.getId(),
 				msgFromNode);
